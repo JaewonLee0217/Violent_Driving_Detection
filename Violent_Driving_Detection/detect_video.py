@@ -15,7 +15,7 @@ flags.DEFINE_string('weights', './checkpoints/yolov3.tf',
                     'path to weights file')
 flags.DEFINE_boolean('tiny', False, 'yolov3 or yolov3-tiny')
 flags.DEFINE_integer('size', 416, 'resize images to')
-flags.DEFINE_string('video', './data/tes.mkv',
+flags.DEFINE_string('video', './data/test2.mkv',
                     'path to video file or number for webcam)')
 flags.DEFINE_string('output', None, 'path to output video')
 flags.DEFINE_string('output_format', 'XVID', 'codec used in VideoWriter when saving video to file')
@@ -69,11 +69,15 @@ def main(_argv):
 
         t1 = time.time()
         boxes, scores, classes, nums = yolo.predict(img_in)
+
+
         t2 = time.time()
         times.append(t2-t1)
         times = times[-20:]
 
         img = draw_outputs(img, (boxes, scores, classes, nums), class_names)
+        if "car" in class_names:
+            print("car detect")
         img = cv2.putText(img, "Time: {:.2f}ms".format(sum(times)/len(times)*1000), (0, 30),
                           cv2.FONT_HERSHEY_COMPLEX_SMALL, 1, (0, 0, 255), 2)
         if FLAGS.output:

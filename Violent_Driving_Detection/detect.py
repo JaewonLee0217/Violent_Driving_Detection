@@ -15,9 +15,9 @@ flags.DEFINE_string('weights', './checkpoints/yolov3.tf',
                     'path to weights file')
 flags.DEFINE_boolean('tiny', False, 'yolov3 or yolov3-tiny')
 flags.DEFINE_integer('size', 416, 'resize images to')
-flags.DEFINE_string('image', './data/test1.jpg', 'path to input image')
+flags.DEFINE_string('image', './data/traffic3.jpg', 'path to input image')
 flags.DEFINE_string('tfrecord', None, 'tfrecord instead of image')
-flags.DEFINE_string('output', './output_test1.jpg', 'path to output image')
+flags.DEFINE_string('output', './trafficOutput3.jpg', 'path to output image')
 flags.DEFINE_integer('num_classes', 80, 'number of classes in the model')
 
 
@@ -52,6 +52,7 @@ def main(_argv):
     t1 = time.time()
     boxes, scores, classes, nums = yolo(img)
     t2 = time.time()
+
     logging.info('time: {}'.format(t2 - t1))
 
     logging.info('detections:')
@@ -59,6 +60,8 @@ def main(_argv):
         logging.info('\t{}, {}, {}'.format(class_names[int(classes[0][i])],
                                            np.array(scores[0][i]),
                                            np.array(boxes[0][i])))
+        if "person" in class_names:
+            print("person detect")
 
     img = cv2.cvtColor(img_raw.numpy(), cv2.COLOR_RGB2BGR)
     img = draw_outputs(img, (boxes, scores, classes, nums), class_names)
